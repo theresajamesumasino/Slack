@@ -1,0 +1,33 @@
+<?php
+
+class Custom~SectionName~
+{
+    private $wp_customize;
+
+    public static function Register($wp_customize) {
+        $customizer = new Custom~SectionName~();
+
+        $customizer->wp_customize = $wp_customize;
+
+        $customizer->SetupSection()->SetupSettings()->SetupControls();
+    }
+
+    private function SetupSection() {
+        $this->wp_customize->add_section('~ThemeName~_~SectionName~', array(
+            'title'     => '~SectionNameFull~',
+            'priority'  => 30,
+        ) );
+
+        return $this;
+    }
+
+    private function SetupSettings() {
+~Settings~
+        return $this;
+    }
+
+    private function SetupControls() {
+~Controls~
+        return $this;
+    }
+}

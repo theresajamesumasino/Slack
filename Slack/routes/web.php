@@ -1,0 +1,57 @@
+<?php
+
+
+Route::view('/', 'welcome');
+Route::view('/howto', 'howto');
+
+Auth::routes();
+
+Route::get('/logout', function () {
+    \Illuminate\Support\Facades\Auth::logout();
+
+    return redirect('/');
+});
+Route::get('/slack', function () {
+$user = App\User::first();
+
+$user->notify(new QuoteTest());
+
+   echo "A slack notification has been send";
+});
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::post('/remindme', 'WelcomePageEmailSignupController@signup');
+
+Route::get('/start', 'ShowStartPage');
+
+Route::get('/fieldtypes', 'GetFieldTypes');
+
+/**
+ * Themes
+ */
+Route::resource('theme', 'ThemeController');
+Route::get('theme/{themeId}/download', 'DownloadThemeFiles');
+
+/**
+ * Sections
+ */
+Route::prefix('/theme/{themeId}')->group(function () {
+    Route::get('sections/{sectionId}/download', 'DownloadSectionFile');
+    Route::resource('sections', 'SectionController');
+});
+
+
+/**
+ * Fields
+ */
+Route::prefix('/theme/{themeId}/sections/{sectionId}')->group(function () {
+    Route::resource('fields', 'FieldsController')->middleware('auth');
+});
+
+/**
+ * Admin Pages
+ */
+Route::group(['prefix' => 'admin', 'middleware' => 'isAdmin'], function() {
+	Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+	Route::get('dashboard', 'AdminDashboard');
+});
